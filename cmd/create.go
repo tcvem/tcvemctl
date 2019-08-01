@@ -22,9 +22,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/tcvem/tcvemctl/pkg/api"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -43,7 +46,15 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("create called")
-		api.CreateCertficate(host, port, notes)
+		address := fmt.Sprintf("%s:%s", viper.GetString("server.address"), viper.GetString("server.port"))
+		conn, err := grpc.Dial(address, grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+		defer conn.Close()
+
+		client := api.NewTcvemClient(conn)
+		client.CreateCertficate(host, port, notes)
 	},
 }
 
