@@ -5,7 +5,7 @@ import (
 	"time"
 
 	uuid "github.com/satori/go.uuid"
-	"github.com/tcvem/tcvemctl/pkg/pb"
+	"github.com/tcvem/backend/pkg/pb"
 	"google.golang.org/grpc"
 )
 
