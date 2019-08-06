@@ -26,7 +26,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/tcvem/tcvemctl/pkg/api"
+	"github.com/tcvem/backend/pkg/cc"
 	"google.golang.org/grpc"
 )
 
@@ -53,8 +53,12 @@ to quickly create a Cobra application.`,
 		}
 		defer conn.Close()
 
-		client := api.NewTcvemClient(conn)
-		client.CreateCertficate(host, port, notes)
+		client := cc.NewTcvemClient(conn)
+		resp, err := client.CreateCertficate(host, port, notes)
+		if err != nil {
+			log.Fatalf("did not crate: %v", err)
+		}
+		fmt.Println(resp)
 	},
 }
 
